@@ -13,6 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name:"allowedOrigin", policy =>
     {
         policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://events-tracker.vercel.app").AllowAnyMethod().AllowAnyHeader();
     });
 });
 
