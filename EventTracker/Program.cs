@@ -1,12 +1,26 @@
 ﻿using EventTracker.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-builder.Services.AddDbContext<ApplicationDbContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Db connection
+var connection = String.Empty;
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
+    connection = builder.Configuration.GetConnectionString("DefaultConnection");
+}else
+{
+    connection = builder.Configuration.GetConnectionString("DefaultConnection");
+}
+builder.Services.AddDbContext<ApplicationDbContext>(options=> options.UseSqlServer(connection));
+
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
